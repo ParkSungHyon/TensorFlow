@@ -1,6 +1,7 @@
 # https://hmkim312.github.io/posts/MNIST_%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%A1%9C_%ED%95%B4%EB%B3%B4%EB%8A%94_%EB%94%A5%EB%9F%AC%EB%8B%9D_(Deep_Learning)/
 # https://velog.io/@skarb4788/%EB%94%A5-%EB%9F%AC%EB%8B%9D-MNIST-%EB%8D%B0%EC%9D%B4%ED%84%B0
 # https://sjpyo.tistory.com/58
+# https://www.tensorflow.org/guide/keras/train_and_evaluate?hl=ko
 
 import tensorflow as tf
 #print("tf v.:", tf.__version__)
@@ -56,3 +57,26 @@ probability_model = tf.keras.Sequential([
 ])
 probability_model(x_test[:5])
 '''
+
+import numpy as np
+predicted_result = model.predict(x_test)
+predicted_labels = np.argmax(predicted_result, axis = 1)
+wrong_result = []
+for n in range(0, len(y_test)):
+    if predicted_labels[n] != y_test[n]:
+        wrong_result.append(n)
+print(len(wrong_result))
+
+import random
+samples = random.choices(population=wrong_result, k = 16)
+print(samples)
+
+import matplotlib.pyplot as plt
+plt.figure(figsize=(14,12))
+for idx, n in enumerate(samples):
+    plt.subplot(4, 4, idx + 1)
+    plt.imshow(x_test[n].reshape(28, 28), cmap = 'Greys', interpolation = 'nearest')
+    plt.title('Label : ' + str(y_test[n]) + 'Predict : ' + str(predicted_labels[n]))
+    plt.axis('off')
+    
+plt.show()
