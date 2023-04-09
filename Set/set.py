@@ -26,7 +26,7 @@ x_train, x_test = x_train / 255.0, x_test / 255.0
 model = tf.keras.models.Sequential([ #Sequential 모델은 하나의 입력 텐서와 하나의 출력 텐서가 있는 일반 레이어 스택에 적합
     tf.keras.layers.Flatten(input_shape=(28,28)),
     tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dropout(0.2), # 이전 레이어 노드의 20%를 제거 (과적합 방지)
+    #tf.keras.layers.Dropout(0.2), # 이전 레이어 노드의 20%를 제거 (과적합 방지)
     tf.keras.layers.Dense(10, activation='softmax')
 ])
 model.summary()
@@ -47,7 +47,7 @@ model.compile(optimizer='adam',
               loss=loss_fn,
               metrics=['accuracy'])
 '''
-model.fit(x_train, y_train, epochs=5)
+model.fit(x_train, y_train, epochs=20)
 model.evaluate(x_test, y_test, verbose=2)
 
 '''
@@ -57,26 +57,28 @@ probability_model = tf.keras.Sequential([
 ])
 probability_model(x_test[:5])
 '''
+################## 추가 내용 ###################
 
 import numpy as np
-predicted_result = model.predict(x_test)
-predicted_labels = np.argmax(predicted_result, axis = 1)
-wrong_result = []
+predicted_result = model.predict(x_test) # model.predict 함수는 3차원 배열을 인자로 받아 2차원 배열로 반환
+predicted_labels = np.argmax(predicted_result, axis = 1) # predicted_labels는 1차원 배열
+
+wrong_result = [] # 예측이 틀린 인덱스 번호를 배열로 할당
 for n in range(0, len(y_test)):
     if predicted_labels[n] != y_test[n]:
         wrong_result.append(n)
 print(len(wrong_result))
 
 import random
-samples = random.choices(population=wrong_result, k = 16)
-print(samples)
+samples = random.choices(population=wrong_result, k = 64)
 
 import matplotlib.pyplot as plt
-plt.figure(figsize=(14,12))
-for idx, n in enumerate(samples):
-    plt.subplot(4, 4, idx + 1)
+plt.figure(figsize=(12,10))
+
+for idx, n in enumerate(samples): # idx:순차번호, n:라벨
+    plt.subplot(8, 8, idx + 1)
     plt.imshow(x_test[n].reshape(28, 28), cmap = 'Greys', interpolation = 'nearest')
-    plt.title('Label : ' + str(y_test[n]) + 'Predict : ' + str(predicted_labels[n]))
+    plt.title('L: ' + str(y_test[n]) + ' P: ' + str(predicted_labels[n]))
     plt.axis('off')
     
 plt.show()
