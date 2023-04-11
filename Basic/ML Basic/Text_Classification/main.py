@@ -48,12 +48,12 @@ def custom_standardization(input_data):
     return tf.strings.regex_replace(stripped_html,
                                     '[%s]' % re.escape(string.punctuation),'')
 
-max_features = 10000
-sequence_length = 250
+max_features = 10000 # 이 모델에서 고려할 최대 단어 수
+sequence_length = 250 # 각 샘플의 텍스트 시퀀스 최대 길이 - 일정하게 맞추기 위해
 
-vectorize_layer = layers.TextVectorization(
-    standardize=custom_standardization,
-    max_token=max_features,
+vectorize_layer = layers.TextVectorization( # 텍스트 데이터를 벡터화하여 모델의 입력으로 사용
+    standardize=custom_standardization, # 텍스트 데이터 전처리 함수
+    max_tokens=max_features,
     output_mode='int',
     output_sequence_length=sequence_length)
 
