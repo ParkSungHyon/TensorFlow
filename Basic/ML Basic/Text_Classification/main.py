@@ -19,21 +19,21 @@ batch_size = 32
 seed = 42
 
 raw_train_ds = tf.keras.utils.text_dataset_from_directory( # 훈련 데이터셋
-    '/Users/park/Documents/Python/DataSet/aclImdb/train',
+    '/Users/b31/Documents/DataSet/aclImdb/train',
     batch_size=batch_size,
     validation_split=0.2, #전체 파일중 20%를 검증용으로 사용
     subset='training',
     seed=seed)
 
 raw_val_ds = tf.keras.utils.text_dataset_from_directory( # 검증 데이터셋
-    '/Users/park/Documents/Python/DataSet/aclImdb/train',
+    '/Users/b31/Documents/DataSet/aclImdb/train',
     batch_size=batch_size,
     validation_split=0.2, #전체 파일중 20%를 검증용으로 사용
     subset='validation',
     seed=seed)
 
 raw_test_ds = tf.keras.utils.text_dataset_from_directory( # 테스트 데이터셋
-    '/Users/park/Documents/Python/DataSet/aclImdb/test',
+    '/Users/b31/Documents/DataSet/aclImdb/test',
     batch_size=batch_size)
 
 #for text_batch, label_batch in raw_train_ds.take(1): # 첫번째 배치를 가져옴
@@ -96,21 +96,21 @@ model = tf.keras.Sequential([
     layers.GlobalAveragePooling1D(),
     layers.Dropout(0.2),
     layers.Dense(1)])
-#model.summary()
+model.summary()
 
 model.compile(loss=losses.BinaryCrossentropy(from_logits=True),
                optimizer='adam',
                metrics=tf.metrics.BinaryAccuracy(threshold=0.0))
-'''
+
 history = model.fit(
     train_ds,
     validation_data=val_ds,
-    epochs=5)
+    epochs=10)
 
 loss, accuracy = model.evaluate(test_ds)
 print("Loss: ", loss)
 print("Accuracy: ", accuracy)
-'''
+
 export_model = tf.keras.Sequential([
     vectorize_layer,
     model,
@@ -137,4 +137,4 @@ examples = [
     "I'd like to see this movie again soon"
 ]
 
-#print(export_model.predict(examples))
+print(export_model.predict(examples))
